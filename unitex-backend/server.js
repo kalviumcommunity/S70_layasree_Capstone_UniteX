@@ -25,33 +25,7 @@ const eventSchema = new mongoose.Schema({
 });
 const Event = mongoose.model("Event", eventSchema);
 
-// **GET Endpoint: Fetch All Events**
-app.get("/api/events", async (req, res) => {
-    try {
-        const events = await Event.find();
-        res.status(200).json(events);
-    } catch (err) {
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
 
-// **POST Endpoint: Add a New Event**
-app.post("/api/events", async (req, res) => {
-    try {
-        const { name, date, location, description } = req.body;
-
-        if (!name || !date || !location || !description) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
-
-        const newEvent = new Event({ name, date, location, description });
-        await newEvent.save();
-
-        res.status(201).json({ message: "Event created successfully", event: newEvent });
-    } catch (err) {
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
 
 // **Start Server**
 const PORT = process.env.PORT || 5000;
