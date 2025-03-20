@@ -2,13 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-
+const router = require("./src/routes/eventRoutes");
 dotenv.config(); // Load environment variables
 
 const app = express();
 app.use(cors());
 app.use(express.json()); // Middleware for JSON data
-
+app.use("/events", router); // Routes
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -17,13 +17,13 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.error("MongoDB connection error:", err));
 
 // Define Mongoose Schema & Model
-const eventSchema = new mongoose.Schema({
-    name: String,
-    date: String,
-    location: String,
-    description: String
-});
-const Event = mongoose.model("Event", eventSchema);
+// const eventSchema = new mongoose.Schema({
+//     name: String,
+//     date: String,
+//     location: String,
+//     description: String
+// });
+// const Event = mongoose.model("Event", eventSchema);
 
 
 

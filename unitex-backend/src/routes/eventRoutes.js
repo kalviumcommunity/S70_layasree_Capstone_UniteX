@@ -19,8 +19,8 @@ router.get("/", async (req, res) => {
  */
 router.post("/", async (req, res) => {
     try {
-        const { name, date, location, description } = req.body;
-        const newEvent = new Event({ name, date, location, description });
+        const { title,  location, description } = req.body;
+        const newEvent = new Event({ title,  location, description });
         await newEvent.save();
         res.status(201).json(newEvent);
     } catch (error) {
