@@ -5,7 +5,10 @@ const eventSchema = new mongoose.Schema({
   description: { type: String },
   date: { type: Date, required: false },
   location: { type: String, required: true },
-  organizer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+
+
+  organizer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, //implementing relationship between Event and User
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Event", eventSchema);
