@@ -7,7 +7,7 @@ const eventSchema = new mongoose.Schema({
   location: { type: String, required: true },
 
 
-  organizer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, //implementing relationship between Event and User
+  organizer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, //implementing the relationship between the event and the user
 
 }, { timestamps: true });
 

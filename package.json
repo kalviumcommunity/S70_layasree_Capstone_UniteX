@@ -1,0 +1,12 @@
+{
+  "name": "s70_layasree_capstone_unitex",
+  "version": "1.0.0",
+  "description": "*UniteX* is a **MERN Stack** web application designed to simplify **event management** by providing a platform for event organizers and users. Organizers can **list events**, while users can **browse, filter, and register** for them. The platform also enables **direct bookings** for private events such as **weddings, birthday parties, and corporate gatherings**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
