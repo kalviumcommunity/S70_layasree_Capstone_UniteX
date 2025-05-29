@@ -1,5 +1,6 @@
 import React from 'react';
 import FileUpload from './components/FileUploads';
+import EventList from './components/EventList';
 
 const App = () => {
   return (
