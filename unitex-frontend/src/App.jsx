@@ -1,4 +1,5 @@
 import React from 'react';
+import FileUpload from './components/FileUploads';
 
 const App = () => {
   return (
@@ -41,8 +42,17 @@ const App = () => {
           <p className="text-lg font-medium">Direct contact for private booking</p>
         </section>
       </div>
+
+      <div>
+      <h1>UniteX File Upload</h1>
+      <FileUpload />
     </div>
+
+    </div>
+         
+    
   );
+
 };
 
 const SidebarIcon = ({ icon }) => (
@@ -56,5 +66,8 @@ const Card = ({ title }) => (
     </div>
   </div>
 );
+
+
+
 
 export default App;
