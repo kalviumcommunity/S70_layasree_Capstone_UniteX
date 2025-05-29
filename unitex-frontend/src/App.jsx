@@ -17,7 +17,7 @@ const App = () => {
       <div className="flex-1 p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-bold">Unite<span className="font-extrabold">X</span></h1>
+          <h1 className="text-xl font-bold">Unite<span className="font-extrabold">X</span></h1>  
           <input
             type="text"
             placeholder="Search text"
