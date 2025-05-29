@@ -5,6 +5,7 @@ const cors = require("cors");
 const router = require("./src/routes/eventRoutes");
 const path = require('path');
 const uploadRoutes = require('./src/routes/uploadRoutes');
+const authRoutes = require('./src/routes/auth');
 dotenv.config(); // Load environment variables
 
 const app = express();
@@ -17,7 +18,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.use("/events", router);
-app.use('/api', uploadRoutes); // Routes
+app.use('/api', uploadRoutes); 
+app.use('/api/auth', authRoutes);// Routes
 
 
 // Connect to MongoDB
@@ -34,4 +36,6 @@ const connectDB = async () => {
 
 // **Start Server**
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+app.listen(PORT,() =>{
+  console.log(`server is running on http://localhost:${PORT}`)
+})
