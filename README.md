@@ -98,7 +98,7 @@
 ---
 
 ## 🌎 Deployment Links (To be added)  
-- **Frontend:** [Netlify - TBD]  
+- **Frontend:** [Netlify -" https://s70layasreecapstoneunitex.netlify.app/ " ]   
 - **Backend:** [Render - TBD]  
 
 ---
