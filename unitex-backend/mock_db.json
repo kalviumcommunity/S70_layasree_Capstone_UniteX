@@ -1,0 +1,186 @@
+{
+  "users": [
+    {
+      "_id": "admin001",
+      "username": "admin",
+      "email": "admin@unitex.com",
+      "password": "$2b$10$GACX.Es2c.2WGhbk0HVwV.QbghzqWs.7qIuuHigx1sJv6.bHDUKCC",
+      "role": "admin",
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "_id": "org001",
+      "username": "organizer1",
+      "email": "organizer1@unitex.com",
+      "password": "$2b$10$imIDhBrnhH/ClZkqGOt.MOGJbIIXto9.Ku1GbaN2uvblnEqYn4Kcy",
+      "role": "organizer",
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "_id": "user001",
+      "username": "user1",
+      "email": "user1@unitex.com",
+      "password": "$2b$10$zx6pRqUOpWQ12BPw8oDK.u5jfpZpqcHXDojy/1A1wN7AZV1vrqYny",
+      "role": "user",
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "username": "laya33",
+      "email": "dccdew@gmail.com",
+      "password": "$2b$10$fjHvA5iRVEdN8yVgKiHueeW7e1FFiw9rhQal.EsYAUXDw0V3GfdiW",
+      "role": "user",
+      "rsvps": [],
+      "_id": "r3n8yjy7o59u16xwmvhk3p",
+      "createdAt": "2026-06-11T16:10:04.204Z",
+      "updatedAt": "2026-06-11T16:10:04.205Z"
+    },
+    {
+      "username": "laya",
+      "email": "dew@gmail.com",
+      "password": "$2b$10$eIDkQVpNr4FLcJqQkqEXUel7577eVy4sPBhHHwD7W2ypI0uKyGsH2",
+      "role": "organizer",
+      "rsvps": [],
+      "_id": "2i1ia2fu1r3cpxus109xxq",
+      "createdAt": "2026-06-11T16:12:06.139Z",
+      "updatedAt": "2026-06-11T16:12:06.139Z"
+    }
+  ],
+  "events": [
+    {
+      "_id": "evt001",
+      "title": "TechFest 2025 — Annual Tech Conference",
+      "description": "Join us for a day filled with inspiring talks from industry leaders, hands-on workshops, and amazing networking opportunities. Topics include AI/ML, Web3, Cloud Computing, and DevOps.\n\nExpect world-class speakers from top companies sharing the latest trends shaping the future of technology.",
+      "date": "2026-06-18T16:03:41.960Z",
+      "location": "Hyderabad International Convention Centre, Hyderabad",
+      "category": "Conference",
+      "imageUrl": "",
+      "maxCapacity": 500,
+      "organizer": "org001",
+      "rsvps": [
+        "user001"
+      ],
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "_id": "evt002",
+      "title": "Summer Music Festival 2025",
+      "description": "A vibrant outdoor music festival featuring live performances from top local and international artists across three stages. Experience an unforgettable evening of indie rock, electronic beats, and acoustic performances under the stars.\n\nFood trucks, art installations, and activities for all ages!",
+      "date": "2026-06-25T16:03:41.960Z",
+      "location": "Necklace Road, Hussain Sagar Lake, Hyderabad",
+      "category": "Festival",
+      "imageUrl": "",
+      "maxCapacity": 2000,
+      "organizer": "org001",
+      "rsvps": [
+        "user001"
+      ],
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:10:20.066Z"
+    },
+    {
+      "_id": "evt003",
+      "title": "Startup Pitch Night — Demo Day",
+      "description": "Watch 10 handpicked startups pitch their innovative ideas to a panel of VCs and angel investors. Network with founders, investors, and tech enthusiasts in an electrifying atmosphere.\n\nDoors open at 6 PM. Light refreshments provided.",
+      "date": "2026-06-14T16:03:41.960Z",
+      "location": "T-Hub, Raidurgam, Hyderabad",
+      "category": "Corporate",
+      "imageUrl": "",
+      "maxCapacity": 200,
+      "organizer": "org001",
+      "rsvps": [],
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "_id": "evt004",
+      "title": "Classical Carnatic Music Concert",
+      "description": "A mesmerizing evening of classical Carnatic music performed by renowned vocalist Pandit Suresh Kumar and accompanying musicians. Relive the rich heritage of Indian classical music in an intimate venue setting.",
+      "date": "2026-07-02T16:03:41.960Z",
+      "location": "Ravindra Bharathi Auditorium, Hyderabad",
+      "category": "Concert",
+      "imageUrl": "",
+      "maxCapacity": 800,
+      "organizer": "org001",
+      "rsvps": [],
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "_id": "evt005",
+      "title": "Wedding Reception — Priya & Arjun",
+      "description": "Celebrate the union of Priya and Arjun with an elegant wedding reception. Guests are invited for an evening of dinner, dancing, and memorable celebrations.\n\nBlack-tie optional. RSVP by 15th July 2025.",
+      "date": "2026-07-11T16:03:41.960Z",
+      "location": "Taj Krishna Hotel, Banjara Hills, Hyderabad",
+      "category": "Wedding",
+      "imageUrl": "",
+      "maxCapacity": 300,
+      "organizer": "org001",
+      "rsvps": [],
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "_id": "evt006",
+      "title": "Photography Workshop: Mastering DSLR",
+      "description": "A beginner to intermediate workshop covering composition, lighting, depth of field, and post-processing techniques. Bring your camera and leave with portfolio-worthy shots!\n\nLimited seats. Hands-on practice in a guided outdoor session included.",
+      "date": "2026-06-16T16:03:41.960Z",
+      "location": "Golconda Fort, Hyderabad",
+      "category": "Other",
+      "imageUrl": "",
+      "maxCapacity": 30,
+      "organizer": "org001",
+      "rsvps": [],
+      "createdAt": "2026-06-11T16:03:41.959Z",
+      "updatedAt": "2026-06-11T16:03:41.959Z"
+    },
+    {
+      "title": "Test Workshop 2026",
+      "description": "A test event created via API",
+      "date": "2026-08-15T10:00:00.000Z",
+      "location": "Hyderabad Tech Park",
+      "category": "Conference",
+      "imageUrl": "",
+      "maxCapacity": 50,
+      "organizer": "org001",
+      "rsvps": [],
+      "_id": "ybs9u2e0e8pyp6sa1v0jo",
+      "createdAt": "2026-06-11T16:06:18.146Z",
+      "updatedAt": "2026-06-11T16:06:18.146Z"
+    }
+  ],
+  "bookings": [
+    {
+      "organizer": "org001",
+      "clientName": "Test Client",
+      "clientEmail": "testclient@email.com",
+      "clientPhone": "+91-9876543210",
+      "eventType": "Corporate",
+      "date": "2026-09-01T00:00:00.000Z",
+      "description": "Board meeting dinner event",
+      "status": "pending",
+      "rsvps": [],
+      "_id": "8rg3dyi4n5mvwmfgb6hzc",
+      "createdAt": "2026-06-11T16:06:18.159Z",
+      "updatedAt": "2026-06-11T16:06:18.159Z"
+    },
+    {
+      "organizer": "org001",
+      "clientName": "vfvvv",
+      "clientEmail": "vrfves@gmail.com",
+      "clientPhone": "54555666444",
+      "eventType": "Corporate",
+      "date": "0004-04-04T00:00:00.000Z",
+      "description": "",
+      "status": "pending",
+      "rsvps": [],
+      "_id": "lvd9j6eo6yb43pr9e5cob",
+      "createdAt": "2026-06-11T16:11:41.689Z",
+      "updatedAt": "2026-06-11T16:11:41.689Z"
+    }
+  ],
+  "messages": []
+}
