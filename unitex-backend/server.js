@@ -17,7 +17,25 @@ const userRoutes = require("./src/routes/userRoutes");
 dotenv.config(); // Load environment variables
 
 const app = express();
-app.use(cors());
+
+// CORS — allow all origins in dev, allow Vercel domain in prod
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow all localhost ports for development
+    if (origin.includes("localhost")) return callback(null, true);
+    // Allow any vercel.app domain (frontend deployed on Vercel)
+    if (origin.includes("vercel.app")) return callback(null, true);
+    // Allow any kalviumcommunity domain
+    if (origin.includes("kalviumcommunity")) return callback(null, true);
+    callback(null, true); // Permissive for now — restrict in production if needed
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
 app.use(express.json()); // Middleware for JSON data
 
 // Ensure uploads folder exists

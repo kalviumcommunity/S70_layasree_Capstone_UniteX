@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, MapPin, Users, Tag, Plus, Check, X, FileText, Image as ImageIcon } from "lucide-react";
+import API_BASE from "../config";
 
 const OrganizerDashboard = ({ token, user }) => {
   const [events, setEvents] = useState([]);
@@ -26,7 +27,7 @@ const OrganizerDashboard = ({ token, user }) => {
   const fetchOrganizerData = async () => {
     try {
       // Fetch events
-      const eventsRes = await axios.get("http://localhost:5000/api/events");
+      const eventsRes = await axios.get(`${API_BASE}/api/events`);
       // Filter events where organizer._id is this user's id
       const filteredEvents = eventsRes.data.filter(
         (evt) => evt.organizer?._id === (user?.id || user?._id)
@@ -34,7 +35,7 @@ const OrganizerDashboard = ({ token, user }) => {
       setEvents(filteredEvents);
 
       // Fetch bookings
-      const bookingsRes = await axios.get("http://localhost:5000/api/bookings/organizer", {
+      const bookingsRes = await axios.get(`${API_BASE}/api/bookings/organizer`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(bookingsRes.data);
@@ -61,14 +62,14 @@ const OrganizerDashboard = ({ token, user }) => {
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
-        const uploadRes = await axios.post("http://localhost:5000/api/upload", formData, {
+        const uploadRes = await axios.post(`${API_BASE}/api/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        imageUrl = `http://localhost:5000/${uploadRes.data.filePath}`;
+        imageUrl = `${API_BASE}/${uploadRes.data.filePath}`;
       }
 
       await axios.post(
-        "http://localhost:5000/api/events",
+        `${API_BASE}/api/events`,
         { ...eventData, imageUrl },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -95,7 +96,7 @@ const OrganizerDashboard = ({ token, user }) => {
   const handleBookingAction = async (bookingId, action) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/bookings/${bookingId}`,
+        `${API_BASE}/api/bookings/${bookingId}`,
         { status: action === "approve" ? "confirmed" : "rejected" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -108,7 +109,7 @@ const OrganizerDashboard = ({ token, user }) => {
   const handleDeleteEvent = async (eventId) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/events/${eventId}`, {
+      await axios.delete(`${API_BASE}/api/events/${eventId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchOrganizerData();

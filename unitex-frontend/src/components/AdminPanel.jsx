@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Users, Calendar, Trash2, ShieldAlert } from "lucide-react";
+import API_BASE from "../config";
 
 const AdminPanel = ({ token }) => {
   const [users, setUsers] = useState([]);
@@ -20,11 +21,11 @@ const AdminPanel = ({ token }) => {
       const headers = { Authorization: `Bearer ${token}` };
       
       // Fetch users
-      const usersRes = await axios.get("http://localhost:5000/api/users", { headers });
+      const usersRes = await axios.get(`${API_BASE}/api/users`, { headers });
       setUsers(usersRes.data);
 
       // Fetch events
-      const eventsRes = await axios.get("http://localhost:5000/api/events");
+      const eventsRes = await axios.get(`${API_BASE}/api/events`);
       setEvents(eventsRes.data);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to load admin data");
@@ -36,7 +37,7 @@ const AdminPanel = ({ token }) => {
   const handleDeleteUser = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user? All their events, bookings, and chat history will be deleted.")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+      await axios.delete(`${API_BASE}/api/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchData();
@@ -48,7 +49,7 @@ const AdminPanel = ({ token }) => {
   const handleDeleteEvent = async (eventId) => {
     if (!window.confirm("Are you sure you want to moderate (delete) this event?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/events/${eventId}`, {
+      await axios.delete(`${API_BASE}/api/events/${eventId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchData();

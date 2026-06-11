@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE from "./config";
 import { 
   Home, Calendar, MessageSquare, Shield, User, LogOut, Search, MapPin, 
   Tag, Compass, Send, CalendarPlus, X, Users, BookOpen
@@ -45,7 +46,7 @@ const App = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/auth/me", {
+      const res = await axios.get(`${API_BASE}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(res.data);
@@ -62,7 +63,7 @@ const App = () => {
       if (selectedCategory && selectedCategory !== "All") params.category = selectedCategory;
       if (locationQuery) params.location = locationQuery;
 
-      const res = await axios.get("http://localhost:5000/api/events", { params });
+      const res = await axios.get(`${API_BASE}/api/events`, { params });
       setEvents(res.data);
     } catch (err) {
       console.error("Failed to fetch events", err);
@@ -89,11 +90,11 @@ const App = () => {
     }
     setRsvpLoading(true);
     try {
-      await axios.post(`http://localhost:5000/api/events/${eventId}/rsvp`, {}, {
+      await axios.post(`${API_BASE}/api/events/${eventId}/rsvp`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Refresh event detail state
-      const updatedEventRes = await axios.get(`http://localhost:5000/api/events/${eventId}`);
+      const updatedEventRes = await axios.get(`${API_BASE}/api/events/${eventId}`);
       setSelectedEvent(updatedEventRes.data);
       // Refresh event lists
       fetchEvents();

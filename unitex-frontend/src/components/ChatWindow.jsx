@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { Send, MessageSquare } from "lucide-react";
+import API_BASE from "../config";
 
 const ChatWindow = ({ eventId, user, token }) => {
   const [messages, setMessages] = useState([]);
@@ -16,7 +17,7 @@ const ChatWindow = ({ eventId, user, token }) => {
     // Fetch message history from REST API
     const fetchHistory = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/messages/${eventId}`, {
+        const res = await axios.get(`${API_BASE}/api/messages/${eventId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMessages(res.data);
@@ -27,7 +28,7 @@ const ChatWindow = ({ eventId, user, token }) => {
     fetchHistory();
 
     // Connect socket
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io(API_BASE);
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

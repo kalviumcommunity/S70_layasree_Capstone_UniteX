@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { X, Lock, Mail, User as UserIcon, Shield } from "lucide-react";
+import API_BASE from "../config";
 
 const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,8 +27,8 @@ const AuthModal = ({ isOpen, onClose, onAuthSuccess }) => {
 
     try {
       const url = isLogin
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/register";
+        ? `${API_BASE}/api/auth/login`
+        : `${API_BASE}/api/auth/register`;
 
       const payload = isLogin
         ? { email: formData.email, password: formData.password }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Mail, User, Phone, Calendar, Briefcase, FileText } from "lucide-react";
+import API_BASE from "../config";
 
 const PrivateBookingForm = ({ token }) => {
   const [organizers, setOrganizers] = useState([]);
@@ -23,7 +24,7 @@ const PrivateBookingForm = ({ token }) => {
         // Fetch all events and extract unique organizers, or we can fetch all users with organizer role.
         // Wait, how do we find organizers? Let's search by looking up events or fetch all users and filter role === organizer.
         // Let's call GET /api/events to see who has organized events, or we can query our users list (if admin, but here we can query /api/events which is public and extract the organizers).
-        const res = await axios.get("http://localhost:5000/api/events");
+        const res = await axios.get(`${API_BASE}/api/events`);
         const uniqueOrgs = [];
         const seen = new Set();
         res.data.forEach((evt) => {
@@ -62,7 +63,7 @@ const PrivateBookingForm = ({ token }) => {
     setMessage({ text: "", isError: false });
 
     try {
-      await axios.post("http://localhost:5000/api/bookings", formData, {
+      await axios.post(`${API_BASE}/api/bookings`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage({ text: "Your booking request has been submitted successfully!", isError: false });
