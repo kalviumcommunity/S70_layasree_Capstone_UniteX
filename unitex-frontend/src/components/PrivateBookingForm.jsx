@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Mail, User, Phone, Calendar, Briefcase, FileText } from "lucide-react";
+import { Mail, User, Phone, Calendar, Briefcase, FileText, Sparkles } from "lucide-react";
 import API_BASE from "../config";
 
 const PrivateBookingForm = ({ token }) => {
@@ -21,9 +21,6 @@ const PrivateBookingForm = ({ token }) => {
   useEffect(() => {
     const fetchOrganizers = async () => {
       try {
-        // Fetch all events and extract unique organizers, or we can fetch all users with organizer role.
-        // Wait, how do we find organizers? Let's search by looking up events or fetch all users and filter role === organizer.
-        // Let's call GET /api/events to see who has organized events, or we can query our users list (if admin, but here we can query /api/events which is public and extract the organizers).
         const res = await axios.get(`${API_BASE}/api/events`);
         const uniqueOrgs = [];
         const seen = new Set();
@@ -67,7 +64,6 @@ const PrivateBookingForm = ({ token }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage({ text: "Your booking request has been submitted successfully!", isError: false });
-      // Reset some fields
       setFormData((prev) => ({
         ...prev,
         clientName: "",
@@ -87,22 +83,28 @@ const PrivateBookingForm = ({ token }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-zinc-950 border border-zinc-800 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
-      {/* Decorative background glow */}
-      <div className="absolute -top-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="w-full max-w-4xl mx-auto bg-zinc-950 border border-zinc-900 rounded-2xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
-          Private Event Booking Request
-        </h2>
-        <p className="text-zinc-400 text-sm mt-1">
-          Directly request event hosting from professional organizers (Weddings, Birthdays, Corporate, etc.).
-        </p>
+      <div className="mb-8 border-b border-zinc-900 pb-6 flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-950/40 border border-violet-800/40 text-violet-400 text-xs font-semibold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5" /> Direct Organizer Booking
+          </div>
+          <h2 className="text-3xl font-black tracking-tight text-white">
+            Private Event Booking Request
+          </h2>
+          <p className="text-zinc-400 text-sm mt-1.5 leading-relaxed">
+            Directly request event hosting from professional organizers (Weddings, Birthdays, Corporate, etc.).
+          </p>
+        </div>
       </div>
 
       {message.text && (
         <div
-          className={`p-4 rounded-xl text-sm mb-6 border ${
+          className={`p-4 rounded-xl text-sm mb-6 border font-medium ${
             message.isError
               ? "bg-red-950/40 border-red-800 text-red-300"
               : "bg-emerald-950/40 border-emerald-800 text-emerald-300"
@@ -113,37 +115,39 @@ const PrivateBookingForm = ({ token }) => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Organizer Selector */}
           <div className="md:col-span-2">
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Select Organizer
             </label>
-            <select
-              name="organizerId"
-              value={formData.organizerId}
-              onChange={handleChange}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200"
-            >
-              {organizers.length === 0 ? (
-                <option value="">No organizers available (Create events first)</option>
-              ) : (
-                organizers.map((org) => (
-                  <option key={org._id} value={org._id}>
-                    {org.username} ({org.email})
-                  </option>
-                ))
-              )}
-            </select>
+            <div className="relative">
+              <select
+                name="organizerId"
+                value={formData.organizerId}
+                onChange={handleChange}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+              >
+                {organizers.length === 0 ? (
+                  <option value="">No organizers available (Create events first)</option>
+                ) : (
+                  organizers.map((org) => (
+                    <option key={org._id} value={org._id}>
+                      {org.username} ({org.email})
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
           </div>
 
           {/* Client Name */}
           <div>
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Your Name
             </label>
-            <div className="relative">
-              <User className="absolute left-3 top-3.5 w-4.5 h-4.5 text-zinc-500" />
+            <div className="relative flex items-center">
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
               <input
                 type="text"
                 name="clientName"
@@ -151,18 +155,19 @@ const PrivateBookingForm = ({ token }) => {
                 value={formData.clientName}
                 onChange={handleChange}
                 placeholder="John Doe"
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200"
+                style={{ paddingLeft: "2.75rem" }}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pr-4 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               />
             </div>
           </div>
 
           {/* Client Email */}
           <div>
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Your Email
             </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3.5 w-4.5 h-4.5 text-zinc-500" />
+            <div className="relative flex items-center">
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
               <input
                 type="email"
                 name="clientEmail"
@@ -170,18 +175,19 @@ const PrivateBookingForm = ({ token }) => {
                 value={formData.clientEmail}
                 onChange={handleChange}
                 placeholder="john@example.com"
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200"
+                style={{ paddingLeft: "2.75rem" }}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pr-4 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               />
             </div>
           </div>
 
           {/* Client Phone */}
           <div>
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Phone Number
             </label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-3.5 w-4.5 h-4.5 text-zinc-500" />
+            <div className="relative flex items-center">
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
               <input
                 type="tel"
                 name="clientPhone"
@@ -189,41 +195,44 @@ const PrivateBookingForm = ({ token }) => {
                 value={formData.clientPhone}
                 onChange={handleChange}
                 placeholder="+1 (555) 000-0000"
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200"
+                style={{ paddingLeft: "2.75rem" }}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pr-4 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               />
             </div>
           </div>
 
           {/* Event Date */}
           <div>
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Preferred Date
             </label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-3.5 w-4.5 h-4.5 text-zinc-500" />
+            <div className="relative flex items-center">
+              <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
               <input
                 type="date"
                 name="date"
                 required
                 value={formData.date}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200 text-zinc-350"
+                style={{ paddingLeft: "2.75rem" }}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pr-4 text-sm text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               />
             </div>
           </div>
 
           {/* Event Type */}
           <div className="md:col-span-2">
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Event Type
             </label>
-            <div className="relative">
-              <Briefcase className="absolute left-3 top-3.5 w-4.5 h-4.5 text-zinc-500" />
+            <div className="relative flex items-center">
+              <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
               <select
                 name="eventType"
                 value={formData.eventType}
                 onChange={handleChange}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200"
+                style={{ paddingLeft: "2.75rem" }}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pr-4 text-sm text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               >
                 <option value="Wedding">Wedding</option>
                 <option value="Birthday">Birthday Party</option>
@@ -236,34 +245,37 @@ const PrivateBookingForm = ({ token }) => {
 
           {/* Description */}
           <div className="md:col-span-2">
-            <label className="block text-zinc-300 text-xs font-semibold uppercase tracking-wider mb-2">
+            <label className="block text-zinc-300 text-xs font-bold uppercase tracking-wider mb-2">
               Event Details & Requirements
             </label>
             <div className="relative">
-              <FileText className="absolute left-3 top-3 w-4.5 h-4.5 text-zinc-500" />
+              <FileText className="absolute left-3.5 top-3.5 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
               <textarea
                 name="description"
                 rows="4"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Tell us about the estimated guest count, theme, audio-visual needs, or caterers..."
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500 transition duration-200"
+                style={{ paddingLeft: "2.75rem" }}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pr-4 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               ></textarea>
             </div>
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white py-3.5 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition duration-200 flex items-center justify-center"
-        >
-          {loading ? (
-            <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-          ) : (
-            "Send Booking Inquiry"
-          )}
-        </button>
+        <div className="pt-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-violet-600/20 active:scale-[0.98] transition duration-200 flex items-center justify-center cursor-pointer"
+          >
+            {loading ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            ) : (
+              "Send Booking Inquiry"
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

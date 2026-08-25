@@ -12,8 +12,12 @@ import CalendarView from "./components/CalendarView";
 import PrivateBookingForm from "./components/PrivateBookingForm";
 import OrganizerDashboard from "./components/OrganizerDashboard";
 import AdminPanel from "./components/AdminPanel";
+import LandingPage from "./components/LandingPage";
 
 const App = () => {
+  // Landing page state
+  const [showLanding, setShowLanding] = useState(!localStorage.getItem("token"));
+
   // Navigation state
   const [currentView, setCurrentView] = useState("browse"); // browse, calendar, booking, organizer, admin
 
@@ -74,6 +78,7 @@ const App = () => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
     setUser(authUser);
+    setShowLanding(false);
   };
 
   const handleLogout = () => {
@@ -81,6 +86,7 @@ const App = () => {
     setToken("");
     setUser(null);
     setCurrentView("browse");
+    setShowLanding(true);
   };
 
   const toggleRSVP = async (eventId) => {
@@ -118,106 +124,186 @@ const App = () => {
 
   const categories = ["All", "Conference", "Festival", "Concert", "Wedding", "Birthday", "Corporate", "Other"];
 
+  // Category → relevant image mapping (Unsplash CDN, no API key required)
+  const categoryImages = {
+    Conference: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80",
+    Festival:   "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80",
+    Concert:    "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&q=80",
+    Wedding:    "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80",
+    Birthday:   "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80",
+    Corporate:  "https://images.unsplash.com/photo-1556761175-4b46a572b786?w=600&q=80",
+    Other:      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&q=80",
+  };
+
+  if (showLanding) {
+    return (
+      <LandingPage
+        onEnter={() => setShowLanding(false)}
+        onSignIn={() => {
+          setShowLanding(false);
+          setShowAuthModal(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-violet-600 selection:text-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-zinc-950 border-r border-zinc-900 flex flex-col justify-between py-6 px-4 shrink-0">
-        <div className="space-y-8">
-          {/* Logo */}
-          <div className="flex items-center gap-3 px-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-650 flex items-center justify-center shadow-lg shadow-violet-650/30">
-              <span className="font-extrabold text-xl text-white tracking-tighter">U</span>
-            </div>
-            <div>
-              <h1 className="font-black text-xl tracking-tight text-white leading-none">
-                Unite<span className="text-violet-400">X</span>
-              </h1>
-              <span className="text-[10px] text-zinc-500 font-bold tracking-wider uppercase">Event Suite</span>
+      <aside className="w-64 bg-zinc-950 border-r border-zinc-900 flex flex-col justify-between h-screen sticky top-0 py-6 px-4 shrink-0 selection:bg-violet-600 overflow-y-auto">
+        <div className="flex flex-col w-full">
+          {/* Logo Header (Separated Card) */}
+          <div 
+            onClick={() => setShowLanding(true)}
+            className="flex items-center justify-between pb-5 border-b border-zinc-900 px-2 cursor-pointer group mb-40"
+            title="Click to view Landing Page"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-600/30 ring-1 ring-white/10 group-hover:scale-105 transition-transform">
+                <span className="font-black text-xl text-white tracking-tighter">U</span>
+              </div>
+              <div>
+                <h1 className="font-black text-xl tracking-tight text-white leading-none">
+                  Unite<span className="text-violet-400">X</span>
+                </h1>
+                <span className="text-[10px] text-violet-400/80 font-extrabold tracking-widest uppercase mt-1 block">
+                  EVENT SUITE
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="space-y-1">
-            <button
-              onClick={() => setCurrentView("browse")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition ${
-                currentView === "browse"
-                  ? "bg-zinc-900 text-white border border-zinc-800"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/40"
-              }`}
-            >
-              <Compass className="w-5 h-5 text-violet-400" />
-              Discover Events
-            </button>
-            <button
-              onClick={() => setCurrentView("calendar")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition ${
-                currentView === "calendar"
-                  ? "bg-zinc-900 text-white border border-zinc-800"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/40"
-              }`}
-            >
-              <Calendar className="w-5 h-5 text-indigo-400" />
-              Event Calendar
-            </button>
-            <button
-              onClick={() => setCurrentView("booking")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition ${
-                currentView === "booking"
-                  ? "bg-zinc-900 text-white border border-zinc-800"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900/40"
-              }`}
-            >
-              <BookOpen className="w-5 h-5 text-emerald-400" />
-              Private Bookings
-            </button>
-
-            {user?.role === "organizer" && (
+          {/* Navigation Links — Distinct Styled Button Tabs */}
+          <div className="space-y-1">
+            <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-2 block">
+              Navigation
+            </span>
+            <nav className="space-y-2.5">
+              {/* Discover Events Button */}
               <button
-                onClick={() => setCurrentView("organizer")}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition ${
-                  currentView === "organizer"
-                    ? "bg-zinc-900 text-white border border-zinc-800"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-900/40"
+                onClick={() => setCurrentView("browse")}
+                className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition duration-200 cursor-pointer border ${
+                  currentView === "browse"
+                    ? "bg-gradient-to-r from-violet-600/20 to-purple-600/10 border-violet-500/80 text-white shadow-lg shadow-violet-600/10"
+                    : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-900 hover:border-zinc-700"
                 }`}
               >
-                <Users className="w-5 h-5 text-pink-400" />
-                Organizer Console
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${currentView === "browse" ? "bg-violet-600 text-white" : "bg-zinc-800 text-violet-400"}`}>
+                    <Compass className="w-4 h-4" />
+                  </div>
+                  <span>Discover Events</span>
+                </div>
+                {currentView === "browse" && (
+                  <span className="w-2 h-2 rounded-full bg-violet-400 shadow-sm shadow-violet-400"></span>
+                )}
               </button>
-            )}
 
-            {user?.role === "admin" && (
+              {/* Event Calendar Button */}
               <button
-                onClick={() => setCurrentView("admin")}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition ${
-                  currentView === "admin"
-                    ? "bg-zinc-900 text-white border border-zinc-800"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-900/40"
+                onClick={() => setCurrentView("calendar")}
+                className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition duration-200 cursor-pointer border ${
+                  currentView === "calendar"
+                    ? "bg-gradient-to-r from-indigo-600/20 to-blue-600/10 border-indigo-500/80 text-white shadow-lg shadow-indigo-600/10"
+                    : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-900 hover:border-zinc-700"
                 }`}
               >
-                <Shield className="w-5 h-5 text-red-400" />
-                Admin Panel
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${currentView === "calendar" ? "bg-indigo-600 text-white" : "bg-zinc-800 text-indigo-400"}`}>
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <span>Event Calendar</span>
+                </div>
+                {currentView === "calendar" && (
+                  <span className="w-2 h-2 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400"></span>
+                )}
               </button>
-            )}
-          </nav>
+
+              {/* Private Bookings Button */}
+              <button
+                onClick={() => setCurrentView("booking")}
+                className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition duration-200 cursor-pointer border ${
+                  currentView === "booking"
+                    ? "bg-gradient-to-r from-emerald-600/20 to-teal-600/10 border-emerald-500/80 text-white shadow-lg shadow-emerald-600/10"
+                    : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-900 hover:border-zinc-700"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${currentView === "booking" ? "bg-emerald-600 text-white" : "bg-zinc-800 text-emerald-400"}`}>
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <span>Private Bookings</span>
+                </div>
+                {currentView === "booking" && (
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400"></span>
+                )}
+              </button>
+
+              {/* Organizer Console Button */}
+              {user?.role === "organizer" && (
+                <button
+                  onClick={() => setCurrentView("organizer")}
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition duration-200 cursor-pointer border ${
+                    currentView === "organizer"
+                      ? "bg-gradient-to-r from-pink-600/20 to-rose-600/10 border-pink-500/80 text-white shadow-lg shadow-pink-600/10"
+                      : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-900 hover:border-zinc-700"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${currentView === "organizer" ? "bg-pink-600 text-white" : "bg-zinc-800 text-pink-400"}`}>
+                      <Users className="w-4 h-4" />
+                    </div>
+                    <span>Organizer Console</span>
+                  </div>
+                  {currentView === "organizer" && (
+                    <span className="w-2 h-2 rounded-full bg-pink-400 shadow-sm shadow-pink-400"></span>
+                  )}
+                </button>
+              )}
+
+              {/* Admin Panel Button */}
+              {user?.role === "admin" && (
+                <button
+                  onClick={() => setCurrentView("admin")}
+                  className={`w-full flex items-center justify-between p-3 rounded-xl text-xs font-bold transition duration-200 cursor-pointer border ${
+                    currentView === "admin"
+                      ? "bg-gradient-to-r from-red-600/20 to-rose-600/10 border-red-500/80 text-white shadow-lg shadow-red-600/10"
+                      : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-900 hover:border-zinc-700"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${currentView === "admin" ? "bg-red-600 text-white" : "bg-zinc-800 text-red-400"}`}>
+                      <Shield className="w-4 h-4" />
+                    </div>
+                    <span>Admin Panel</span>
+                  </div>
+                  {currentView === "admin" && (
+                    <span className="w-2 h-2 rounded-full bg-red-400 shadow-sm shadow-red-400"></span>
+                  )}
+                </button>
+              )}
+            </nav>
+          </div>
         </div>
 
-        {/* Footer Auth Info */}
-        <div className="border-t border-zinc-900 pt-4">
+        {/* Account / Auth CTA Button */}
+        <div className="border-t border-zinc-900 pt-5">
           {user ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-3 px-2">
-                <div className="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center border border-zinc-805">
-                  <User className="w-4 h-4 text-violet-400" />
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-zinc-900/60 border border-zinc-800/80">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                  {user.username?.[0]?.toUpperCase() || "U"}
                 </div>
                 <div className="truncate">
                   <p className="text-xs font-bold text-white truncate leading-none mb-1">{user.username}</p>
-                  <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wide">{user.role}</span>
+                  <span className="text-[9px] text-violet-400 bg-violet-950/60 border border-violet-800/40 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                    {user.role}
+                  </span>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-800 hover:bg-zinc-900 text-xs font-bold transition duration-200"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 text-xs font-bold transition duration-200 cursor-pointer text-zinc-300 hover:text-white"
               >
                 <LogOut className="w-4 h-4" />
                 Log Out
@@ -226,8 +312,9 @@ const App = () => {
           ) : (
             <button
               onClick={() => setShowAuthModal(true)}
-              className="w-full bg-gradient-to-r from-violet-650 to-indigo-650 hover:from-violet-600 hover:to-indigo-600 text-white font-semibold py-3 rounded-xl text-sm shadow-md transition duration-200"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs shadow-lg shadow-violet-600/25 active:scale-[0.98] transition duration-200 cursor-pointer"
             >
+              <User className="w-4 h-4" />
               Sign In / Sign Up
             </button>
           )}
@@ -245,25 +332,27 @@ const App = () => {
                 <p className="text-zinc-500 text-sm mt-1">Explore and attend high-quality private and public gatherings.</p>
               </div>
               {/* Search fields */}
-              <div className="flex flex-wrap gap-2 w-full md:w-auto">
-                <div className="relative flex-1 md:flex-none">
-                  <Search className="absolute left-3 top-3 w-4.5 h-4.5 text-zinc-500" />
+              <div className="flex flex-wrap gap-3 w-full md:w-auto">
+                <div className="relative flex-1 md:flex-none flex items-center">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search event name..."
-                    className="w-full md:w-56 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 pl-10 pr-4 text-xs focus:outline-none focus:border-violet-500 transition"
+                    style={{ paddingLeft: "2.75rem" }}
+                    className="w-full md:w-60 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 pr-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition"
                   />
                 </div>
-                <div className="relative flex-1 md:flex-none">
-                  <MapPin className="absolute left-3 top-3 w-4.5 h-4.5 text-zinc-500" />
+                <div className="relative flex-1 md:flex-none flex items-center">
+                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none z-10" />
                   <input
                     type="text"
                     value={locationQuery}
                     onChange={(e) => setLocationQuery(e.target.value)}
                     placeholder="Location..."
-                    className="w-full md:w-40 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 pl-10 pr-4 text-xs focus:outline-none focus:border-violet-500 transition"
+                    style={{ paddingLeft: "2.75rem" }}
+                    className="w-full md:w-44 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 pr-4 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition"
                   />
                 </div>
               </div>
@@ -299,15 +388,14 @@ const App = () => {
                     className="relative bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden hover:border-zinc-850 hover:shadow-xl transition duration-300 flex flex-col justify-between"
                   >
                     {/* Event Banner */}
-                    <div className="relative h-44 w-full bg-gradient-to-br from-indigo-950 to-violet-950 border-b border-zinc-900 flex items-center justify-center overflow-hidden">
-                      {evt.imageUrl ? (
-                        <img src={evt.imageUrl} alt={evt.title} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="absolute inset-0 bg-gradient-to-br from-violet-900/40 to-indigo-900/40 backdrop-blur-md flex flex-col justify-center items-center p-4">
-                          <Tag className="w-8 h-8 text-violet-405/60 mb-2" />
-                          <span className="text-[10px] uppercase font-bold tracking-widest text-violet-400">{evt.category}</span>
-                        </div>
-                      )}
+                    <div className="relative h-44 w-full border-b border-zinc-900 flex items-center justify-center overflow-hidden bg-zinc-900">
+                      <img
+                        src={evt.imageUrl || categoryImages[evt.category] || "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&q=80"}
+                        alt={evt.title}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent" />
                       <span className="absolute top-3 right-3 text-[10px] uppercase font-extrabold bg-zinc-950/80 backdrop-blur-sm border border-zinc-800 text-zinc-300 py-1 px-2.5 rounded-full">
                         {evt.category}
                       </span>
